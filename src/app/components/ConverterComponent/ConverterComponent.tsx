@@ -1,30 +1,44 @@
 import { useState } from 'react';
 import { ExchangeRateType } from '@models/types/ExchangeRateType';
 import { Button, Input, Label, Result, Wrapper } from './ConverterComponentStyles';
-import { DEFAULT_OUTPUT_CURRENCY as defaultOutputCurrency } from '@shared/vars/constants';
+import {
+  DEFAULT_INPUT_AMOUNT as defaultInputAmount,
+  DEFAULT_OUTPUT_CURRENCY as defaultOutputCurrency
+} from '@shared/vars/constants';
 
 type Props = {
   rates: ExchangeRateType[];
 }
 
-// = ({ text }: Props) => {
 export const ConverterComponent = ({ rates }: Props) => {
-  const [amount, setAmount] = useState<number>(100);
+  const [amount, setAmount] = useState<number>(defaultInputAmount);
   const [outputCurrency, setOutputCurrency] = useState<string>(defaultOutputCurrency);
   const [result, setResult] = useState<number>(0);
 
+  let ratesByCode: any = [];
+  rates.forEach(rate => {
+    ratesByCode[rate.currencyCode] = {
+      amount: rate.amount,
+      rate: parseFloat(rate.rate.replace(',', '.'))
+    };
+  });
+
   const convert = () => {
-    setResult(amount);
+    setResult(amount / (ratesByCode[outputCurrency].rate / ratesByCode[outputCurrency].amount));
+  };
+
+  const resetResult = () => {
+    setResult(0);
   };
 
   const handleAmountChange = (event: any) => {
     setAmount(event.target.value);
-    convert();
+    resetResult();
   };
 
   const handleOutputCurrencyChange = (event: any) => {
     setOutputCurrency(event.target.value);
-    convert();
+    resetResult();
   };
 
   const handleSubmit = (event: any) => {
@@ -36,7 +50,7 @@ export const ConverterComponent = ({ rates }: Props) => {
     if (result) {
       return (
         <Result>
-          {amount}&nbsp;CZK =&nbsp;{result}&nbsp;{outputCurrency}
+          =&nbsp;{result}&nbsp;{outputCurrency}
         </Result>
       );
     } else {
@@ -53,7 +67,7 @@ export const ConverterComponent = ({ rates }: Props) => {
         <Label htmlFor="inputAmount">
           Částka:
         </Label>
-        <Input id="inputAmount" type="number" value={amount} onChange={handleAmountChange} />
+        <Input id="inputAmount" type="number" min={0} step={'any'} value={amount} onChange={handleAmountChange} />
 
         <Label htmlFor="inputCurrency">
           Z:

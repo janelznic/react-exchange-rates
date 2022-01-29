@@ -44,12 +44,13 @@ export const Input = styled.input`
 export const Button = styled.button`
   height: 2em;
   color: #FFF;
-  background: #0D4680;
+  // background: #0D4680;
+  background: #327CFE;
   border: 0;
   cursor: pointer;
 
   :hover {
-    background: #2487EA;
+    // background: #2487EA;
   }
 `;
 
