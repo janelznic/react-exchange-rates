@@ -1,5 +1,14 @@
 {
   "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "@components/*": ["./app/components/*"],
+      "@interfaces/*": ["./app/models/interfaces/*"],
+      "@models/*": ["./app/models/*"],
+      "@pages/*": ["./app/pages/*"],
+      "@services/*": ["./app/services/*"],
+      "@shared/*": ["./app/shared/*"]
+    },
     "target": "es5",
     "lib": [
       "dom",
@@ -18,6 +27,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "outDir": "./build/",
+    "removeComments": true,
     "jsx": "react-jsx"
   },
   "include": [
