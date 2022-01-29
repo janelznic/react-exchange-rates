@@ -1,68 +1,18 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import styled from 'styled-components'
 import { ExchangeRateType } from '@models/types/ExchangeRateType';
+import { CNB_RATES_URI as cnbRatesUri } from '@shared/vars/constants';
 import {
-  PARSE_RATE_REGEX as parseRateRegex,
-  CNB_RATES_URI as cnbRatesUri
-} from '@shared/vars/constants';
-
-const Table = styled.table`
-  padding: 0 0 1em 0;
-  font-size: 1em;
-  background: #292C34;
-  color: #FFF;
-  border-radius: 1em;
-  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, .5);
-`;
-
-const TableHead = styled.thead`
-  font-size: 1em;
-  font-weight: bold;
-  color: #54A9F1;
-`;
-
-const TableHeadRow = styled.tr`
-  td {
-    padding: 1em 1em .25em;
-  }
-`;
-
-const TableBody = styled.tbody`
-  
-`;
-
-const TableRow = styled.tr`
-  :hover {
-    background: #363B45;
-    color: #F5C867;
-  }
-`;
-
-const TableCol = styled.td`
-  margin: 0;
-  padding: .25em 1em;
-
-  :first-child {
-    padding-left: 2em;
-  }
-
-  :last-child {
-    padding-right: 2em;
-  }
-`;
-
-const Title = styled.h1`
-  padding-bottom: .5em;
-  font-size: 2em;
-  text-align: center;
-  color: #000;
-`;
-
-const Wrapper = styled.section`
-  padding: 2em 4em;
-  background: #FFF;
-`;
+  ConverterComponent,
+  TableBodyComponent,
+  TableColComponent,
+  TableComponent,
+  TableHeadComponent,
+  TableHeadRowComponent,
+  TableRowComponent,
+  TitleComponent,
+  WrapperComponent
+} from '@components/index';
 
 export const ExchangeRatesPage = () => {
   const [fetchedData, setFetchedData] = useState('');
@@ -73,11 +23,17 @@ export const ExchangeRatesPage = () => {
       setFetchedData(res.data);
     };
 
-    fetchData();
+    if (!fetchedData) {
+      fetchData();
+    }
   }, [fetchedData]);
 
-  const pureRateStrings = fetchedData.split('\n').filter((row: string) => parseRateRegex.test(row));
-  const tableData: ExchangeRateType[] = pureRateStrings.map(elm => {
+  const pureRateStringsArray = fetchedData.split('\n').filter((row) => {
+    const arr = row.split('|');
+    return (arr.length === 5 && !isNaN(parseFloat(arr[4].replace(',', '.'))));
+  });
+
+  const tableData: ExchangeRateType[] = pureRateStringsArray.map(elm => {
     const arr = elm.split('|');
 
     return {
@@ -90,31 +46,33 @@ export const ExchangeRatesPage = () => {
   });
 
   return (
-    <Wrapper>
-      <Title>Kurzy ČNB</Title>
+    <WrapperComponent>
+      <TitleComponent>Kurzy ČNB</TitleComponent>
 
-      <Table cellSpacing="0" cellPadding="0">
-        <TableHead>
-          <TableHeadRow>
-            <TableCol>Země</TableCol>
-            <TableCol>Měna</TableCol>
-            <TableCol>Množství</TableCol>
-            <TableCol>Kód</TableCol>
-            <TableCol>Kurz</TableCol>
-          </TableHeadRow>
-        </TableHead>
-        <TableBody>
+      <TableComponent cellSpacing="0" cellPadding="0">
+        <TableHeadComponent>
+          <TableHeadRowComponent>
+            <TableColComponent>Země</TableColComponent>
+            <TableColComponent>Měna</TableColComponent>
+            <TableColComponent>Množství</TableColComponent>
+            <TableColComponent>Kód</TableColComponent>
+            <TableColComponent>Kurz</TableColComponent>
+          </TableHeadRowComponent>
+        </TableHeadComponent>
+        <TableBodyComponent>
           {tableData.map((rate, index) => (
-            <TableRow key={index}>
-              <TableCol>{rate.country}</TableCol>
-              <TableCol>{rate.currencyName}</TableCol>
-              <TableCol>{rate.amount}</TableCol>
-              <TableCol>{rate.currencyCode}</TableCol>
-              <TableCol>{rate.rate}</TableCol>
-            </TableRow>
+            <TableRowComponent key={index}>
+              <TableColComponent>{rate.country}</TableColComponent>
+              <TableColComponent>{rate.currencyName}</TableColComponent>
+              <TableColComponent>{rate.amount}</TableColComponent>
+              <TableColComponent>{rate.currencyCode}</TableColComponent>
+              <TableColComponent>{rate.rate}</TableColComponent>
+            </TableRowComponent>
           ))}
-        </TableBody>
-      </Table>
-    </Wrapper>
+        </TableBodyComponent>
+      </TableComponent>
+
+      <ConverterComponent rates={tableData} />
+    </WrapperComponent>
   );
 };
