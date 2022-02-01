@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { AlertMessageEnum } from '@models/enums/AlertMessageEnum';
 import { ExchangeRateType } from '@models/types/ExchangeRateType';
 import { CNB_RATES_URI as cnbRatesUri } from '@shared/vars/constants';
 import {
+  AlertMessageComponent,
   ConverterComponent,
   TableBodyComponent,
   TableColComponent,
@@ -19,8 +21,12 @@ export const ExchangeRatesPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await axios.get(cnbRatesUri);
-      setFetchedData(res.data);
+      try {
+        const res = await axios.get(cnbRatesUri);
+        setFetchedData(res.data);
+      } catch (err) {
+        console.error(err);
+      }
     };
 
     if (!fetchedData) {
@@ -45,34 +51,50 @@ export const ExchangeRatesPage = () => {
     }
   });
 
+  const Content = () => {
+    if (tableData.hasOwnProperty('length') && tableData.length > 0) {
+      return (
+        <div>
+          <TableComponent cellSpacing="0" cellPadding="0">
+            <TableHeadComponent>
+              <TableHeadRowComponent>
+                <TableColComponent>Země</TableColComponent>
+                <TableColComponent>Měna</TableColComponent>
+                <TableColComponent>Množství</TableColComponent>
+                <TableColComponent>Kód</TableColComponent>
+                <TableColComponent>Kurz</TableColComponent>
+              </TableHeadRowComponent>
+            </TableHeadComponent>
+            <TableBodyComponent>
+              {tableData.map((rate, index) => (
+                <TableRowComponent key={index}>
+                  <TableColComponent>{rate.country}</TableColComponent>
+                  <TableColComponent>{rate.currencyName}</TableColComponent>
+                  <TableColComponent>{rate.amount}</TableColComponent>
+                  <TableColComponent>{rate.currencyCode}</TableColComponent>
+                  <TableColComponent>{rate.rate}</TableColComponent>
+                </TableRowComponent>
+              ))}
+            </TableBodyComponent>
+          </TableComponent>
+
+          <ConverterComponent rates={tableData} />
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <AlertMessageComponent type={AlertMessageEnum.Error}>Data se nepodařilo načíst.</AlertMessageComponent>
+        </div>
+      );
+    }
+  };
+
   return (
     <WrapperComponent>
       <TitleComponent>Kurzy ČNB</TitleComponent>
 
-      <TableComponent cellSpacing="0" cellPadding="0">
-        <TableHeadComponent>
-          <TableHeadRowComponent>
-            <TableColComponent>Země</TableColComponent>
-            <TableColComponent>Měna</TableColComponent>
-            <TableColComponent>Množství</TableColComponent>
-            <TableColComponent>Kód</TableColComponent>
-            <TableColComponent>Kurz</TableColComponent>
-          </TableHeadRowComponent>
-        </TableHeadComponent>
-        <TableBodyComponent>
-          {tableData.map((rate, index) => (
-            <TableRowComponent key={index}>
-              <TableColComponent>{rate.country}</TableColComponent>
-              <TableColComponent>{rate.currencyName}</TableColComponent>
-              <TableColComponent>{rate.amount}</TableColComponent>
-              <TableColComponent>{rate.currencyCode}</TableColComponent>
-              <TableColComponent>{rate.rate}</TableColComponent>
-            </TableRowComponent>
-          ))}
-        </TableBodyComponent>
-      </TableComponent>
-
-      <ConverterComponent rates={tableData} />
+      <Content />
     </WrapperComponent>
   );
 };

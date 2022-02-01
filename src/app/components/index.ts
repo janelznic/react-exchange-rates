@@ -1,3 +1,4 @@
+export { AlertMessageComponent } from './AlertMessageComponent/AlertMessageComponent';
 export { ConverterComponent } from './ConverterComponent/ConverterComponent';
 
 export { TableBodyComponent } from './TableBodyComponent/TableBodyComponent';
