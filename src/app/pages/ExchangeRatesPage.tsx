@@ -18,6 +18,7 @@ import {
 
 export const ExchangeRatesPage = () => {
   const [fetchedData, setFetchedData] = useState('');
+  const [errorStatus, setErrorStatus] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,6 +26,7 @@ export const ExchangeRatesPage = () => {
         const res = await axios.get(cnbRatesUri);
         setFetchedData(res.data);
       } catch (err) {
+        setErrorStatus(true);
         console.error(err);
       }
     };
@@ -82,11 +84,19 @@ export const ExchangeRatesPage = () => {
         </div>
       );
     } else {
-      return (
-        <div>
-          <AlertMessageComponent type={AlertMessageEnum.Error}>Data se nepodařilo načíst.</AlertMessageComponent>
-        </div>
-      );
+      if (!errorStatus) {
+        return (
+          <div>
+            <AlertMessageComponent type={AlertMessageEnum.Info}>Data se načítají.</AlertMessageComponent>
+          </div>
+        );
+      } else {
+        return (
+          <div>
+            <AlertMessageComponent type={AlertMessageEnum.Error}>Data se nepodařilo načíst.</AlertMessageComponent>
+          </div>
+        );
+      }
     }
   };
 
