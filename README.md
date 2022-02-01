@@ -1,10 +1,10 @@
-# ČNB Exchange Rates React App for Ribbon
+# ČNB Exchange Rates React App
 
 ## Scripts
 
 In the project directory, you can run:
 
-### `npm start`
+### `npm run dev`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -27,6 +27,11 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+### `npm start`
+
+Runs prepared build via built-in `http-server`.\
+Open [http://localhost:8080](http://localhost:8080) to view it in the browser.
+
 ### `npm run eject`
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**
@@ -42,3 +47,7 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## License
+
+MIT © Jan Elznic – [Homepage](https://janelznic.cz) – [Github](https://github.com/janelznic) – [LinkedIn](https://linkedin.com/in/janelznic/)
