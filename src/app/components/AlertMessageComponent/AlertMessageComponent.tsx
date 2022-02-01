@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import styled from 'styled-components';
-import { AlertMessageEnum } from '@models/enums/AlertMessageEnum';
+import { AlertMessageEnum } from '../../models/enums/AlertMessageEnum';
 
 const Alert = styled.div`
   text-align: center;
@@ -41,7 +41,7 @@ const Alert = styled.div`
 `;
 
 type Props = {
-  type: AlertMessageEnum;
+  type?: AlertMessageEnum;
   children?: ReactNode;
 }
 

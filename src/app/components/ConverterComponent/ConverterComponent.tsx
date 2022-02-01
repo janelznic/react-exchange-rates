@@ -63,7 +63,6 @@ export const ConverterComponent = ({ rates }: Props) => {
   return (
     <Wrapper>
       <form onSubmit={handleSubmit}>
-
         <Label htmlFor="inputAmount">
           Částka:
         </Label>
