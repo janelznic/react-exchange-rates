@@ -31,15 +31,6 @@
       "last 1 safari version"
     ]
   },
-  "rootDir": "./src",
-  "moduleNameMapper": {
-    "@components/(.*)": "<rootDir>/app/components/$1",
-    "@interfaces/(.*)": "<rootDir>/app/interfaces/$1",
-    "@models/(.*)": "<rootDir>/app/models/$1",
-    "@pages/(.*)": "<rootDir>/app/pages/$1",
-    "@services/(.*)": "<rootDir>/app/services/$1",
-    "@shared/(.*)": "<rootDir>/app/shared/$1"
-  },
   "dependencies": {
     "@types/jest": "^27.4.0",
     "@types/node": "^16.11.21",
